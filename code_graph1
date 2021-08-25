@@ -1,0 +1,27 @@
+#loading libraries
+
+library(readxl)
+library(tidyr)
+library(dplyr)
+library(forcats)
+
+#loading data
+data <- read_excel("C:/Users/Haifa.Benmessaoud/Downloads/Tendance-dans-les-quantiles.xlsx")
+View(data)
+names(data)
+
+#convert the columns into ligns 
+data1<-data %>% pivot_longer(c("station_1","station_2","station_3","station_4","station_5","station_6","station_7","station_8","station_9","station_10","station_11","station_12","station_13","station_14","station_15","station_16","station_17","station_18","station_19","station_20","station_21","station_22","station_23","station_24","station_25"), names_to = "Stations", values_to = "Valeurs")
+
+#reorganising the stations
+
+data1$Stations<-factor(data1$Stations,levels=c("station_1","station_2","station_3","station_4","station_5","station_6","station_7","station_8","station_9","station_10","station_11","station_12","station_13","station_14","station_15","station_16","station_17","station_18","station_19","station_20","station_21","station_22","station_23","station_24","station_25"))
+
+# Plot
+data1 %>%
+  mutate(Periode = fct_relevel(Periode,"T2","T5","T10","T20","T50","T100"))%>%
+  ggplot( aes(x=Periode, y=Valeurs, group=Stations, color=Stations)) +
+  geom_line() +
+  theme_bw() +
+  ylab("Water temperature (°C)")+
+  xlab("Return periods (years)")
